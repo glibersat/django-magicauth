@@ -132,9 +132,45 @@ Install dependencies and run `tox`
 
 ```
 cd src/django-magicauth
-pip install -r requirements.txt
+pip install -r -U dev-requirements.txt
 tox
 ```
+
+We use `pre-commit` to ensure code correctness. You should install it:
+
+```shell
+pre-commit install
+```
+
+### Release process
+
+The follwing dependencies need to be installed: `pip setuptools wheel twine`:
+
+```shell
+python -m pip install --upgrade pip setuptools wheel twine
+```
+
+First, ensure code is clean:
+
+```shell
+pip install -U pre-commit
+pre-commit install
+pre-commit autoupdate
+pre-commit
+```
+
+1. Create a new MD file under `docs/releases` named after the new version and fill the file with the changes
+2. Change the version in `pyproject.toml`
+3. Create a commit named *Release version <version>*
+4. Open and merge the PR for that release
+5. Create a new release at https://github.com/betagouv/django-magicauth/releases/new
+6. Publish the new version on PyPI:
+   ```shell
+    python setup.py sdist bdist_wheel
+    twine upload dist/*
+    ```
+ 
+
 
 # Projects using Magicauth
 https://github.com/betagouv/e-controle/
@@ -143,6 +179,10 @@ https://github.com/betagouv/peps
 https://github.com/betagouv/urbanvitaliz-django
 
 Join us !
+
+# Security contact
+
+If you think you found a security problem on `django-magicauth`, you can contact us at tech@aidantsconnect.beta.gouv.fr
 
 # Step-by-step in pictures
 
@@ -179,4 +219,3 @@ Step 4 : once they click on the button and follow the link, the user is directed
 Step 5 : the user is logged in to the service (`ValidateTokenView`) and redirected to the landing page.
 
 <kbd><img src="https://user-images.githubusercontent.com/911434/86133987-5be37100-bae9-11ea-844a-97ba5de5722d.png" /></kbd>
-

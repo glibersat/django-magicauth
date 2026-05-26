@@ -16,7 +16,7 @@ class DefaultAccountAdapter:
         """
         return magicauth_settings.FROM_EMAIL
 
-    def email_unknown_callback(self, request, user_email, form):
+    def email_unknown_callback(self, user_email, form):
         """
         Method to call when the email entered in the form is not found in the database.
         The default just raises an error whose message gets displayed on the login page.

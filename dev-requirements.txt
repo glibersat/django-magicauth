@@ -1,0 +1,9 @@
+-r requirements.txt
+
+pytest
+pytest-django
+factory_boy>=3.0.0
+pytest-factoryboy
+ipdb
+tox
+pre-commit
