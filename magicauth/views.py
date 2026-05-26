@@ -15,7 +15,6 @@ from magicauth.models import MagicToken
 from magicauth.next_url import NextUrlMixin
 from magicauth.send_token import SendTokenMixin
 
-from . import adapters
 from . import signals
 
 try:
@@ -63,12 +62,6 @@ class LoginView(NextUrlMixin, SendTokenMixin, FormView):
 
     def form_valid(self, form, *args, **kwargs):
         user_email = form.cleaned_data["email"]
-
-        email_field = magicauth_settings.EMAIL_FIELD
-        field_lookup = {f"{email_field}__iexact": user_email}
-        if not get_user_model().objects.filter(**field_lookup).exists():
-            adapter = adapters.get_adapter()
-            adapter.email_unknown_callback(self.request, user_email, form)
 
         context = {"next_url": self.get_next_url(self.request)}
 
@@ -226,13 +219,13 @@ class ValidateTokenView(NextUrlMixin, FormView):
         # Remove them all for this user
         MagicToken.objects.filter(user=token.user).delete()
 
-        response = redirect(url)
+        response = redirect(success_url)
 
         signals.user_logged_in.send(
-            sender=request.user.__class__,
-            request=request,
+            sender=self.request.user.__class__,
+            request=self.request,
             response=response,
-            user=request.user,
+            user=self.request.user,
         )
 
         return response
